@@ -1,6 +1,8 @@
 using Contracts;
+using Entities;
 using LoggerService;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), @"\nlog.config"));
 
 builder.Services.AddScoped<ILoggerManager, LoggerManager>();
+
+builder.Services.AddDbContext<RepositoryContext>(
+    opts => opts.UseSqlServer(
+        builder.Configuration.GetConnectionString("sqlConnection"),
+    b => b.MigrationsAssembly("CompanyEmplayees")
+    )
+);
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
