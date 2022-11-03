@@ -19,7 +19,7 @@ builder.Services.AddDbContext<RepositoryContext>(
     b => b.MigrationsAssembly("CompanyEmplayees")
     )
 );
-
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
