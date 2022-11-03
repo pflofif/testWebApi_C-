@@ -8,19 +8,17 @@ namespace CompanyEmplayees.Controllers
     public class WeatherForecastController : ControllerBase
     {
         private readonly ILoggerManager _logger;
-
-        public WeatherForecastController(ILoggerManager logger)
+        private readonly IRepositoryManager _repository; 
+        public WeatherForecastController(ILoggerManager logger, IRepositoryManager repository)
         {
             _logger = logger;
+            _repository = repository;
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<string>> Get()
         {
-            _logger.LogInfo("Here is LogInfo from WeatherForecast");
-            _logger.LogDebug("Here is LogDebug from WeatherForecast");
-            _logger.LogError("Here is LogError from WeatherForecast");
-            _logger.LogWarn("Here is LogWarn from WeatherForecast");
+            
 
             return new string[] { "value1, value2" };
         }
