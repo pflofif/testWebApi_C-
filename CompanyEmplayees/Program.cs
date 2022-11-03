@@ -4,6 +4,7 @@ using LoggerService;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using NLog;
+using Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddDbContext<RepositoryContext>(
     )
 );
 
+builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {

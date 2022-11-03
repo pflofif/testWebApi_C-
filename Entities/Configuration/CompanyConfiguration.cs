@@ -23,6 +23,13 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
                 Name = "Admin_Solutions Ltd",
                 Address = "312 Forest Avenue, BF 923",
                 Country = "USA"
+            },
+            new Company
+            {
+                Id = new Guid("3d432a70-94ce-4d15-9494-5248280c2ce3"),
+                Name = "Project_Solution Ltd",
+                Address = "412 Forest Avenue, BF 923",
+                Country = "USA"
             }
         );
 
