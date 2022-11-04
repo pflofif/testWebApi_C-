@@ -1,6 +1,9 @@
+using System.Net;
 using Contracts;
 using Entities;
+using Entities.ErrorModel;
 using LoggerService;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using NLog;
@@ -35,7 +38,25 @@ builder.Services.Configure<IISOptions>(_ => { });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseExceptionHandler(appError =>
+    appError.Run(async context =>
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json";
 
+        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+        if (contextFeature is not null)
+        {
+            ILoggerManager logger = new LoggerManager();
+            logger.LogError($"Something went wrong: {contextFeature.Error}");
+
+            await context.Response.WriteAsync(new ErrorDetails()
+            {
+                StatusCode = context.Response.StatusCode,
+                Message = "Internal server error"
+            }.ToString());
+        }
+    }));
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCors("CorsPolicy");
