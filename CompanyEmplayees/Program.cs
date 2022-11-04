@@ -64,7 +64,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.All
 });
-//app.UseRouting();
+app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();

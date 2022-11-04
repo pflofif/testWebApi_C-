@@ -30,5 +30,18 @@ namespace CompanyEmplayees.Controllers
 
             return Ok(companiesDto);
         }
+
+        [HttpGet("{id:guid}")]
+        public IActionResult GetCompany(Guid id)
+        {
+            var company = _repositoryManager.Company.GetCompany(id, trackChanges: false);
+            if (company is null)
+            {
+                _logger.LogInfo($"Company with id: {id} doenst exist in the db");
+                return NotFound();
+            }
+            var companyDto = _mapper.Map<CompanyDto>(company);
+            return Ok(companyDto);
+        }
     }
 }
