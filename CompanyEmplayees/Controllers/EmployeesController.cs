@@ -4,6 +4,7 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CompanyEmplayees.Controllers
 {
@@ -36,6 +37,23 @@ namespace CompanyEmplayees.Controllers
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees); 
             return Ok(employeesDto);
         }
-
+        [HttpGet("{id:guid}")]
+        public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
+        {
+            var company = _repositoryManager.Company.GetCompany(companyId, trackChanges: false);
+            if (company is null)
+            {
+                _logger.LogInfo($"Company with id: {companyId} doesnt exist");
+                return NotFound();
+            }
+            var employee = _repositoryManager.Employee.GetEmployee(companyId, id, trackChanges: false);
+            if (employee is null)
+            {
+                _logger.LogInfo($"Employee with id: {companyId} doesnt exist");
+                return NotFound();
+            }
+            var employeeDto = _mapper.Map<EmployeeDto>(employee);
+            return Ok(employeeDto);
+        }
     }
 }
